@@ -5,7 +5,7 @@ import numpy as np
 from config import *
 
 class MOSEICategorical_Emotion(Dataset):    
-    def __init__(self, path, train=False, valid = False, bert_vectors = BERT_VECTORS, siamese_vectors = SBERT_VECTORS, visual_vectors = OPENFACE_VECTORS, emotion_label = 0):
+    def __init__(self, path, train=False, valid = False, bert_vectors = BERT_VECTORS, siamese_vectors = SBERT_VECTORS, visual_vectors = VISUAL_VECTORS, emotion_label = 0):
         self.videoIDs, self.videoSpeakers, self.videoLabels, self.videoText,\
         self.videoAudio, self.videoVisual, self.videoSentence, self.trainVid,\
         self.testVid = pickle.load(open(path, 'rb'), encoding='latin1')
@@ -111,7 +111,7 @@ class MOSEICategorical_Emotion(Dataset):
 
 
 class MOSEICategorical_Sentiment(Dataset):  
-    def __init__(self, path, train=False, valid = False,  bert_vectors = BERT_VECTORS, siamese_vectors = SBERT_VECTORS, visual_vectors = OPENFACE_VECTORS):
+    def __init__(self, path, train=False, valid = False,  bert_vectors = BERT_VECTORS, siamese_vectors = SBERT_VECTORS, visual_vectors = VISUAL_VECTORS):
         self.videoIDs, self.videoSpeakers, self.videoLabels, self.videoText,\
         self.videoAudio, self.videoVisual, self.videoSentence, self.trainVid,\
         self.testVid = pickle.load(open(path, 'rb'), encoding='latin1')
