@@ -2,10 +2,9 @@ import torch, pickle, pandas as pd
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
 import numpy as np
-from config import *
 
 class MELDCategorical(Dataset):    
-    def __init__(self, path, train=True, n_classes = 7,  bert_vectors = BERT_VECTORS, siamese_vectors = SBERT_VECTORS, visual_vectors = VISUAL_VECTORS):
+    def __init__(self, path, bert_vectors, siamese_vectors, visual_vectors, train=True, n_classes = 7,  ):
         self.n_classes = n_classes
         self.videoIDs, self.videoSpeakers, self.labels_emotion, self.videoText,\
         self.videoAudio, self.videoSentence, self.trainVid,\

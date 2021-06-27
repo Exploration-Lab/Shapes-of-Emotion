@@ -10,7 +10,7 @@ from model import CategoricalModel, MaskedNLLLoss
 from dataloader import IEMOCAPCategorical
 
 from sentence_transformers import losses, SentenceTransformer
-from config import *
+from config import IEMOCAP_4, IEMOCAP_6
 
 np.random.seed(42)
 torch.manual_seed(42)
@@ -152,12 +152,12 @@ if __name__ == '__main__':
         n_classes = 4
         loss_weights = torch.FloatTensor([1/0.1426370239929562, 1/0.2386088487783403, 1/0.37596302003081666, 1/0.24279110719788685])
         loss_function2 = MaskedNLLLoss(torch.FloatTensor([1/0.21408045977011494, 1/0.7859195402298851]).cuda())
-        PATH = paths_4
+        PATH = IEMOCAP_4
     elif args.label_count == 6:
         n_classes = 6
         loss_weights = torch.FloatTensor([1/0.08674698795180723, 1/0.14440619621342513, 1/0.2278829604130809, 1/0.16058519793459552, 1/0.12771084337349398, 1/0.25266781411359723])
         loss_function2 = MaskedNLLLoss(torch.FloatTensor([1/0.2298, 1/0.7702]).cuda())
-        PATH = paths_6
+        PATH = IEMOCAP_6
     else:
         print("Number of classes can only be 4 or 6")
         exit(0)

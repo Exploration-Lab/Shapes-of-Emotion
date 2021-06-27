@@ -10,7 +10,7 @@ from model import CategoricalModel, MaskedNLLLoss
 from dataloader import MOSEICategorical_Sentiment
 
 from sentence_transformers import losses, SentenceTransformer
-from config import *
+from config import MOSEI
 
 np.random.seed(42)
 torch.manual_seed(42)
@@ -24,13 +24,13 @@ def get_train_valid_sampler(trainset, valid=0.1):
     return SubsetRandomSampler(idx[split:]), SubsetRandomSampler(idx[:split])
 
 def get_MOSEI_loaders(path, batch_size=128, num_workers=0, pin_memory=False):
-    trainset = MOSEICategorical_Sentiment(path=path,  train= True, siamese_vectors = SBERT_VECTORS)
-    validset = MOSEICategorical_Sentiment(path=path, valid= True, siamese_vectors = SBERT_VECTORS)
+    trainset = MOSEICategorical_Sentiment(path=path,  train= True,  bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS)
+    validset = MOSEICategorical_Sentiment(path=path, valid= True,  bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS)
     # trainset = MOSEICategorical5(path=path, bert_vectors = 'sbert_vectors.p')
     
     train_loader = DataLoader(trainset, batch_size=batch_size, collate_fn=trainset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
     valid_loader = DataLoader(validset, batch_size=batch_size,  collate_fn=validset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
-    testset = MOSEICategorical_Sentiment(path=path, train=False,  siamese_vectors = SBERT_VECTORS)
+    testset = MOSEICategorical_Sentiment(path=path, train=False,   bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS)
     # testset = MOSEICategorical5(path=path, train = False, bert_vectors = 'sbert_vectors.p')
     test_loader = DataLoader(testset,  batch_size=batch_size, collate_fn=testset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
     return train_loader, valid_loader, test_loader
@@ -149,7 +149,7 @@ if __name__ == '__main__':
         print('Running on CPU')
     print("Tensorboard logs in " + args.log_dir)
 
-
+    PATH = MOSEI
 
 
     batch_size = args.batch_size
@@ -175,12 +175,12 @@ if __name__ == '__main__':
     
     loss_function2 = MaskedNLLLoss(torch.FloatTensor([1/0.6604, 1/0.3396]).cuda())
     
-    sbert_model = SentenceTransformer(SIAMESE_MODEL, device = 'cuda')
+    sbert_model = SentenceTransformer(PATH.SIAMESE_MODEL, device = 'cuda')
     softmax_loss = losses.SoftmaxLoss(model=sbert_model, sentence_embedding_dimension=sbert_model.get_sentence_embedding_dimension(), num_labels=2).cuda()
-    softmax_loss.load_state_dict(torch.load(SIAMESE_CLASSIFIER, map_location=f'cuda:{args.gpu}'))
+    softmax_loss.load_state_dict(torch.load(PATH.SIAMESE_CLASSIFIER, map_location=f'cuda:{args.gpu}'))
 
     optimizer = optim.Adam(chain(model.parameters(),softmax_loss.parameters()), lr=args.lr, weight_decay=args.l2)
-    train_loader, valid_loader, test_loader = get_MOSEI_loaders(CATEGORICAL_DATA, batch_size=batch_size, num_workers=0)
+    train_loader, valid_loader, test_loader = get_MOSEI_loaders(PATH.CATEGORICAL_DATA, batch_size=batch_size, num_workers=0)
     best_loss, best_label, best_pred, best_mask, best_fscore = None, None, None, None, None
 
     

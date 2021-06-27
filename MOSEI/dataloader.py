@@ -2,26 +2,26 @@ import torch, pickle, pandas as pd
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
 import numpy as np
-from config import *
+from config import MOSEI, MOSEI_VALID_IDS, MOSEI_TRAIN_IDS, MOSEI_TEST_IDS
 
 class MOSEICategorical_Emotion(Dataset):    
-    def __init__(self, path, train=False, valid = False, bert_vectors = BERT_VECTORS, siamese_vectors = SBERT_VECTORS, visual_vectors = VISUAL_VECTORS, emotion_label = 0):
+    def __init__(self, path, bert_vectors , siamese_vectors, visual_vectors, train=False, valid = False, emotion_label = 0):
         self.videoIDs, self.videoSpeakers, self.videoLabels, self.videoText,\
         self.videoAudio, self.videoVisual, self.videoSentence, self.trainVid,\
         self.testVid = pickle.load(open(path, 'rb'), encoding='latin1')
         
         if train:
-            self.keys = [x for x in TRAIN_DATA if x in self.videoIDs]
+            self.keys = [x for x in MOSEI_TRAIN_IDS if x in self.videoIDs]
         elif valid:
-            self.keys = [x for x in VALID_DATA if x in self.videoIDs]
+            self.keys = [x for x in MOSEI_VALID_IDS if x in self.videoIDs]
         else:
-            self.keys = [x for x in TEST_DATA if x in self.videoIDs]
+            self.keys = [x for x in MOSEI_TEST_IDS if x in self.videoIDs]
 
         self.bert_vectors = pickle.load(open(bert_vectors, 'rb'), encoding='latin1')
         self.siamese_vectors = pickle.load(open(siamese_vectors, 'rb'), encoding='latin1')
         self.visual_vectors = pickle.load(open(visual_vectors, 'rb'), encoding='latin1')
         self.emotion_label = emotion_label
-        self.labels = pickle.load(open(LABEL_EMOTION,'rb'), encoding = 'latin1')
+        self.labels = pickle.load(open(MOSEI.LABEL_EMOTION,'rb'), encoding = 'latin1')
 
         self.len = len(self.keys)
         
@@ -111,21 +111,21 @@ class MOSEICategorical_Emotion(Dataset):
 
 
 class MOSEICategorical_Sentiment(Dataset):  
-    def __init__(self, path, train=False, valid = False,  bert_vectors = BERT_VECTORS, siamese_vectors = SBERT_VECTORS, visual_vectors = VISUAL_VECTORS):
+    def __init__(self, path, bert_vectors, siamese_vectors, visual_vectors, train=False, valid = False):
         self.videoIDs, self.videoSpeakers, self.videoLabels, self.videoText,\
         self.videoAudio, self.videoVisual, self.videoSentence, self.trainVid,\
         self.testVid = pickle.load(open(path, 'rb'), encoding='latin1')
         if train:
-            self.keys = [x for x in TRAIN_DATA if x in self.videoIDs]
+            self.keys = [x for x in MOSEI_TRAIN_IDS if x in self.videoIDs]
         elif valid:
-            self.keys = [x for x in VALID_DATA if x in self.videoIDs]
+            self.keys = [x for x in MOSEI_VALID_IDS if x in self.videoIDs]
         else:
-            self.keys = [x for x in TEST_DATA if x in self.videoIDs]
+            self.keys = [x for x in MOSEI_TEST_IDS if x in self.videoIDs]
 
         self.bert_vectors = pickle.load(open(bert_vectors, 'rb'), encoding='latin1')
         self.siamese_vectors = pickle.load(open(siamese_vectors, 'rb'), encoding='latin1')
         self.visual_vectors = pickle.load(open(visual_vectors, 'rb'), encoding='latin1')
-        self.labels = pickle.load(open(LABEL_SENTIMENT,'rb'), encoding = 'latin1')
+        self.labels = pickle.load(open(MOSEI.LABEL_SENTIMENT,'rb'), encoding = 'latin1')
     
         self.len = len(self.keys)
         

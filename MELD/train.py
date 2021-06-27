@@ -10,7 +10,7 @@ from model import CategoricalModel, MaskedNLLLoss
 from dataloader import MELDCategorical
 
 from sentence_transformers import losses, SentenceTransformer
-from config import *
+from config import MELD
 
 np.random.seed(42)
 torch.manual_seed(42)
@@ -24,11 +24,11 @@ def get_train_valid_sampler(trainset, valid=0.1):
     return SubsetRandomSampler(idx[split:]), SubsetRandomSampler(idx[:split])
 
 def get_MELD_loaders(path, batch_size=128, valid = 0.1, num_workers=0, pin_memory=False):
-    trainset = MELDCategorical(path=path,  train= True)
+    trainset = MELDCategorical(path=path,  train= True,bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS)
     train_sampler, valid_sampler = get_train_valid_sampler(trainset, valid)
     train_loader = DataLoader(trainset, batch_size=batch_size, sampler = train_sampler, collate_fn=trainset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
     valid_loader = DataLoader(trainset, batch_size=batch_size, sampler = valid_sampler, collate_fn=trainset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
-    testset = MELDCategorical(path=path, train=False)
+    testset = MELDCategorical(path=path, train=False,bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS)
     test_loader = DataLoader(testset,  batch_size=batch_size, collate_fn=testset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
     return train_loader, valid_loader, test_loader
 
@@ -146,6 +146,7 @@ if __name__ == '__main__':
         print('Running on CPU')
     print("Tensorboard logs in " + args.log_dir)
 
+    PATH = MELD
     n_classes = 7
     loss_weights = torch.FloatTensor([1/0.4688316911321134, 1/0.12316509149406797, 1/0.028152020912929822, 1/0.07048059521415645, 1/0.16981701186406595, 1/0.02573899054896441, 1/0.11381459883370199])
     
@@ -173,12 +174,12 @@ if __name__ == '__main__':
     
     loss_function2 = MaskedNLLLoss(torch.FloatTensor([1/0.0903880957168711, 1/0.9096119042831289]).cuda())
     
-    sbert_model = SentenceTransformer(SIAMESE_MODEL, device = 'cuda')
+    sbert_model = SentenceTransformer(PATH.SIAMESE_MODEL, device = 'cuda')
     softmax_loss = losses.SoftmaxLoss(model=sbert_model, sentence_embedding_dimension=sbert_model.get_sentence_embedding_dimension(), num_labels=2).cuda()
-    softmax_loss.load_state_dict(torch.load(SIAMESE_CLASSIFIER, map_location=f'cuda:{args.gpu}'))
+    softmax_loss.load_state_dict(torch.load(PATH.SIAMESE_CLASSIFIER, map_location=f'cuda:{args.gpu}'))
 
     optimizer = optim.Adam(chain(model.parameters(),softmax_loss.parameters()), lr=args.lr, weight_decay=args.l2)
-    train_loader, valid_loader, test_loader = get_MELD_loaders(CATEGORICAL_DATA, batch_size=batch_size, num_workers=0)
+    train_loader, valid_loader, test_loader = get_MELD_loaders(PATH.CATEGORICAL_DATA, batch_size=batch_size, num_workers=0)
     best_loss, best_label, best_pred, best_mask, best_fscore = None, None, None, None, None
 
     
