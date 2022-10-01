@@ -46,8 +46,6 @@ class IEMOCAPCategorical(Dataset):
         return labels
     def __getitem__(self, index):
         vid = self.keys[index]
-        # print(vid)
-        # print(self.get_labels(vid))
         num_utterance = len(self.videoLabels[vid])
         bert_textf = torch.FloatTensor(self.get_linguistic_feautures_bert(vid))
         
@@ -55,7 +53,6 @@ class IEMOCAPCategorical(Dataset):
         acouf = torch.FloatTensor(self.videoAudio[vid])
         visualf = torch.FloatTensor(self.videoVisual[vid])
 
-        # print(textf.shape, acouf.shape, visualf.shape)
         prior_textf = torch.zeros(textf.size())
         prior_acouf = torch.zeros(acouf.size())
         prior_visualf = torch.zeros(visualf.size())
@@ -67,7 +64,6 @@ class IEMOCAPCategorical(Dataset):
         qmask = self.videoSpeakers[vid]
 
         predecessor_label = 0
-        # print(self.videoLabels[vid])
         for j in range(num_utterance):
             label_val = self.videoLabels[vid][j]
             if j!=0:
@@ -78,9 +74,6 @@ class IEMOCAPCategorical(Dataset):
                 
             emotion_shift.append(1-((predecessor_label in [0,2,4] and label_val in [1,3,5]) or (label_val in [0,2,4] and predecessor_label in [1,3,5])))
             prior_labels.append(predecessor_label)
-        
-        # print(textf.shape, acouf.shape, visualf.shape)
-        # print(prior_textf.shape, prior_acouf.shape, prior_visualf.shape)
         return bert_textf,\
                visualf,\
                torch.FloatTensor(self.videoAudio[vid]),\

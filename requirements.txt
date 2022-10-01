@@ -1,0 +1,91 @@
+absl-py==0.11.0
+astunparse==1.6.3
+blis==0.7.4
+cachetools==4.2.1
+catalogue==1.0.0
+certifi==2020.12.5
+cffi @ file:///tmp/build/80754af9/cffi_1606255099073/work
+chardet==4.0.0
+click @ file:///home/linux1/recipes/ci/click_1610990599742/work
+colorama==0.4.4
+cycler==0.10.0
+cymem==2.0.5
+decorator==5.0.7
+filelock==3.0.12
+flatbuffers==1.12
+future==0.18.2
+gast==0.3.3
+gdown==3.13.0
+google-auth==1.26.1
+google-auth-oauthlib==0.4.2
+google-pasta==0.2.0
+grpcio==1.32.0
+h5py==2.10.0
+idna==2.10
+importlib-metadata==3.4.0
+Jinja2==2.11.3
+joblib @ file:///tmp/build/80754af9/joblib_1613502643832/work
+Keras-Preprocessing==1.1.2
+kiwisolver==1.3.1
+Markdown==3.3.3
+MarkupSafe==1.1.1
+matplotlib==3.4.2
+mkl-fft==1.2.0
+mkl-random==1.1.1
+mkl-service==2.3.0
+murmurhash==1.0.5
+nltk @ file:///tmp/build/80754af9/nltk_1618327084230/work
+numpy @ file:///tmp/build/80754af9/numpy_and_numpy_base_1603479632437/work
+oauthlib==3.1.0
+olefile==0.46
+opt-einsum==3.3.0
+packaging==20.9
+pandas==1.2.2
+pathy==0.5.2
+Pillow @ file:///tmp/build/80754af9/pillow_1609786740831/work
+plac==1.1.3
+preshed==3.0.5
+protobuf==3.14.0
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
+pycparser @ file:///tmp/build/80754af9/pycparser_1594388511720/work
+pydantic==1.7.3
+pyparsing==2.4.7
+PySocks==1.7.1
+python-dateutil==2.8.1
+pytz==2021.1
+regex @ file:///tmp/build/80754af9/regex_1617569716423/work
+requests==2.25.1
+requests-oauthlib==1.3.0
+rsa==4.7
+sacremoses==0.0.45
+scikit-learn==0.24.1
+scipy==1.6.0
+seaborn==0.11.1
+six @ file:///tmp/build/80754af9/six_1605205313296/work
+sklearn==0.0
+smart-open==3.0.0
+spacy==2.3.5
+spacy-legacy==3.0.5
+srsly==1.0.5
+tensorboard==2.4.1
+tensorboard-plugin-wit==1.8.0
+tensorboardX==2.1
+tensorflow==2.4.1
+tensorflow-estimator==2.4.0
+termcolor==1.1.0
+thinc==7.4.5
+threadpoolctl==2.1.0
+tokenizers==0.10.2
+torch==1.6.0
+torchvision==0.3.0
+tqdm @ file:///tmp/build/80754af9/tqdm_1615925068909/work
+transformers==4.5.1
+typer==0.3.2
+typing-extensions==3.7.4.3
+urllib3==1.26.3
+validators==0.18.2
+wasabi==0.8.2
+Werkzeug==1.0.1
+wrapt==1.12.1
+zipp==3.4.0

@@ -26,12 +26,11 @@ def get_train_valid_sampler(trainset, valid=0.1):
 def get_MOSEI_loaders(path, batch_size=128, num_workers=0, pin_memory=False):
     trainset = MOSEICategorical_Sentiment(path=path,  train= True,  bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS)
     validset = MOSEICategorical_Sentiment(path=path, valid= True,  bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS)
-    # trainset = MOSEICategorical5(path=path, bert_vectors = 'sbert_vectors.p')
-    
+    testset = MOSEICategorical_Sentiment(path=path, train=False,   bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS)
+
     train_loader = DataLoader(trainset, batch_size=batch_size, collate_fn=trainset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
     valid_loader = DataLoader(validset, batch_size=batch_size,  collate_fn=validset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
-    testset = MOSEICategorical_Sentiment(path=path, train=False,   bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS)
-    # testset = MOSEICategorical5(path=path, train = False, bert_vectors = 'sbert_vectors.p')
+    
     test_loader = DataLoader(testset,  batch_size=batch_size, collate_fn=testset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
     return train_loader, valid_loader, test_loader
 
@@ -117,7 +116,6 @@ def train_or_eval_model(model,loss_function, dataloader, optimizer=None, train=F
     print(f'EMOTION PREDICTION REPORT {method}')
     print(classification_report(labels,preds,sample_weight=masks,digits=4))
     print(confusion_matrix(labels,preds,sample_weight=masks))
-    # print(f'avg_{method}_accuracy',avg_accuracy,)
     return avg_loss, avg_accuracy, labels, preds, masks,avg_fscore, [alphas_f, alphas_b, vids]
 
 if __name__ == '__main__':

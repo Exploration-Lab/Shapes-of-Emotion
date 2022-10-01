@@ -114,7 +114,6 @@ def train_or_eval_model(model,loss_function, dataloader, optimizer=None, train=F
     print(f'EMOTION PREDICTION REPORT {method}')
     print(classification_report(labels,preds,sample_weight=masks,digits=4))
     print(confusion_matrix(labels,preds,sample_weight=masks))
-    # print(f'avg_{method}_accuracy',avg_accuracy,)
     return avg_loss, avg_accuracy, labels, preds, masks,avg_fscore, [alphas_f, alphas_b, vids]
 
 if __name__ == '__main__':

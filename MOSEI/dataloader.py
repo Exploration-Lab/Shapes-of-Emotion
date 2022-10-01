@@ -56,8 +56,6 @@ class MOSEICategorical_Emotion(Dataset):
         return labels
     def __getitem__(self, index):
         vid = self.keys[index]
-        # print(vid)
-        # print(self.get_labels(vid))
         num_utterance = len(self.videoLabels[vid])
         bert_textf = torch.FloatTensor(self.get_linguistic_feautures_bert(vid))
         
@@ -65,7 +63,6 @@ class MOSEICategorical_Emotion(Dataset):
         acouf = torch.FloatTensor(self.videoAudio[vid])
         visualf = torch.FloatTensor(self.get_visual_feautures(vid))
 
-        # print(textf.shape, acouf.shape, visualf.shape)
         prior_textf = torch.zeros(textf.size())
         prior_acouf = torch.zeros(acouf.size())
         prior_visualf = torch.zeros(visualf.size())
@@ -75,7 +72,6 @@ class MOSEICategorical_Emotion(Dataset):
 
 
         predecessor_label = 0
-        # print(self.videoLabels[vid])
         for j in range(num_utterance):
             label_val = self.videoLabels[vid][j]
             if j!=0:
@@ -87,8 +83,6 @@ class MOSEICategorical_Emotion(Dataset):
             emotion_shift.append(1-((predecessor_label in [0] and label_val in [1]) or (label_val in [0] and predecessor_label in [1])))
             prior_labels.append(predecessor_label)
         
-        # print(textf.shape, acouf.shape, visualf.shape)
-        # print(prior_textf.shape, prior_acouf.shape, prior_visualf.shape)
         return bert_textf,\
                visualf,\
                torch.FloatTensor(self.videoAudio[vid]),\
@@ -160,8 +154,6 @@ class MOSEICategorical_Sentiment(Dataset):
         return labels
     def __getitem__(self, index):
         vid = self.keys[index]
-        # print(vid)
-        # print(self.get_labels(vid))
         num_utterance = len(self.videoLabels[vid])
         bert_textf = torch.FloatTensor(self.get_linguistic_feautures_bert(vid))
         
@@ -169,15 +161,12 @@ class MOSEICategorical_Sentiment(Dataset):
         acouf = torch.FloatTensor(self.videoAudio[vid])
         visualf = torch.FloatTensor(self.get_visual_feautures(vid))
 
-        # print(textf.shape, acouf.shape, visualf.shape)
         prior_textf = torch.zeros(textf.size())
         prior_acouf = torch.zeros(acouf.size())
         prior_visualf = torch.zeros(visualf.size())
 
         prior_labels = []
         emotion_shift = []
-
-
 
         predecessor_label = 0
         for j in range(num_utterance):

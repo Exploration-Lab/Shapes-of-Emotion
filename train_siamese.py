@@ -1,10 +1,3 @@
-"""
-Usage:
-python training_nli.py
-
-OR
-python training_nli.py pretrained_transformer_model_name
-"""
 from torch.utils.data import DataLoader
 import torch
 import math
@@ -85,7 +78,6 @@ if __name__ == '__main__':
 
     train_loss = losses.SoftmaxLoss2(model=model, sentence_embedding_dimension=model.get_sentence_embedding_dimension(), num_labels=2, weight = torch.FloatTensor(PATH.SIAMESE_WEIGHTS).cuda())
     train_loss.to('cuda')
-    # dev_evaluator = BinaryClassificationEvaluator.from_input_examples(dev_samples, batch_size=train_batch_size, name='sts-dev')
     dev_evaluator = LabelAccuracyEvaluator(dev_dataloader, softmax_model = train_loss,  name='mlnet-dev')
     # Configure the training
     num_epochs = args.epochs

@@ -28,12 +28,10 @@ def get_MOSEI_loaders(path, emotion_label, batch_size=128, valid=0.1, num_worker
     trainset = MOSEICategorical_Emotion(path=path,  train= True, bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS, emotion_label=emotion_label)
     validset = MOSEICategorical_Emotion(path=path, valid= True, bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS, emotion_label=emotion_label)
     testset = MOSEICategorical_Emotion(path=path, train=False,  bert_vectors = PATH.BERT_VECTORS, siamese_vectors = PATH.SBERT_VECTORS, visual_vectors = PATH.VISUAL_VECTORS, emotion_label = emotion_label)
-    
-    # trainset = MOSEICategorical5(path=path, bert_vectors = 'sbert_vectors.p')
-    
+        
     train_loader = DataLoader(trainset, batch_size=batch_size, collate_fn=trainset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
     valid_loader = DataLoader(validset, batch_size=batch_size,  collate_fn=validset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
-    # testset = MOSEICategorical5(path=path, train = False, bert_vectors = 'sbert_vectors.p')
+
     test_loader = DataLoader(testset,  batch_size=batch_size, collate_fn=testset.collate_fn, num_workers=num_workers, pin_memory=pin_memory)
     return train_loader, valid_loader, test_loader
 
@@ -74,7 +72,7 @@ def train_or_eval_model(model,loss_function, dataloader, optimizer=None, train=F
         masks.append(umask.view(-1).cpu().numpy())
         losses.append(loss.item()*masks[-1].sum())
         losses_siamese.append(loss_siamese.item()*masks[-1].sum())
-        # loss += loss_siamese
+        loss += loss_siamese
         if train:
             loss.backward()
             optimizer.step()
@@ -119,7 +117,6 @@ def train_or_eval_model(model,loss_function, dataloader, optimizer=None, train=F
     print(f'EMOTION PREDICTION REPORT {method}')
     print(classification_report(labels,preds,sample_weight=masks,digits=4))
     print(confusion_matrix(labels,preds,sample_weight=masks))
-    # print(f'avg_{method}_accuracy',avg_accuracy,)
     return avg_loss, avg_accuracy, labels, preds, masks,avg_fscore, [alphas_f, alphas_b, vids]
 
 if __name__ == '__main__':
@@ -167,21 +164,6 @@ if __name__ == '__main__':
     # Instantiate model
     model = CategoricalModel(D_m_text, D_m_audio, D_m_video, D_m_context, D_g, D_p, D_e, D_h, n_classes=n_classes, dropout_rec=args.rec_dropout, dropout=args.dropout)
 
-#TRAIN+DEV  
-# 0.5352236509506539
-# 0.2631607868996593
-# 0.2123310253874052
-# 0.10138476755687438
-# 0.17782173865259918
-# 0.0828112979448291
-
-#TEST
-# 0.5356517935258093
-# 0.2588801399825022
-# 0.2158792650918635
-# 0.1
-# 0.1767716535433071
-# 0.08276465441819772
 
     if cuda:
         model.cuda()

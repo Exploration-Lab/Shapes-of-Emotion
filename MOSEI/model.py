@@ -26,16 +26,12 @@ class ContrastiveLoss(nn.Module):
         self.eps = 1e-9
 
     def forward(self, output1, output2, target, umask, size_average=True):
-        # print(output1.shape, output2.shape, target.shape)
         distances = (output1-output2).pow(2).sum(2)  # squared distances
-        # print(distances.shape, umask.shape)
         distances = distances.view(-1)
         losses = 0.5 * (target.float() * distances +
                         (1 + -1 * target).float() * F.relu(self.margin - (distances + self.eps).sqrt()).pow(2))
         umask = umask.permute(1, 0)
-        # print(umask.shape)
         umask = umask.reshape(1,-1).squeeze()
-        # print(umask.shape)
         losses = losses*umask
         return losses.sum()/umask.sum() if size_average else losses.sum()
 
@@ -71,7 +67,6 @@ class MultilogueNetCell(nn.Module):
         self.D_g, self.D_p, self.D_e = D_g, D_p, D_e
         self.g_cell = nn.GRUCell(D_m_context + D_p, D_g)
         self.p_cell = nn.GRUCell(D_m_party + D_g, D_p)
-        # self.e_cell = nn.GRUCell(D_p, D_e)
         self.e_cell = new_gru_cell(D_p, D_e)
 
         self.dropout = nn.Dropout(dropout)
@@ -124,7 +119,6 @@ class MultilogueNet(nn.Module):
         e_ = torch.zeros(0).type(U.type()) 
         e = e_
         alpha = []
-        # print('**',emotion_shift_prob.shape)
         for u_,uc_,qmask_,emotion_shift_prob_ in zip(U, U_context, qmask, emotion_shift_prob):
             g_, q_, e_, alpha_ = self.multilogue_cell(u_, uc_, qmask_, g_hist, q_, e_, emotion_shift_prob_)
             g_hist = torch.cat([g_hist, g_.unsqueeze(0)],0)

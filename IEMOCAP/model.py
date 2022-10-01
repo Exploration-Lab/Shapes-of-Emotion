@@ -11,7 +11,6 @@ class new_gru_cell(nn.Module):
     def forward(self,s_t, e_0, r_t):
         candidate_t = torch.tanh(self.w_hi(s_t) + self.u_hh(r_t*e_0))
         e_t = r_t*e_0 + (1-r_t)*candidate_t
-        # e_t =  r_t*e_0 + candidate_t
         return e_t
 
 class ContrastiveLoss(nn.Module):
@@ -26,16 +25,12 @@ class ContrastiveLoss(nn.Module):
         self.eps = 1e-9
 
     def forward(self, output1, output2, target, umask, size_average=True):
-        # print(output1.shape, output2.shape, target.shape)
         distances = (output1-output2).pow(2).sum(2)  # squared distances
-        # print(distances.shape, umask.shape)
         distances = distances.view(-1)
         losses = 0.5 * (target.float() * distances +
                         (1 + -1 * target).float() * F.relu(self.margin - (distances + self.eps).sqrt()).pow(2))
         umask = umask.permute(1, 0)
-        # print(umask.shape)
         umask = umask.reshape(1,-1).squeeze()
-        # print(umask.shape)
         losses = losses*umask
         return losses.sum()/umask.sum() if size_average else losses.sum()
 
@@ -71,7 +66,6 @@ class MultilogueNetCell(nn.Module):
         self.D_g, self.D_p, self.D_e = D_g, D_p, D_e
         self.g_cell = nn.GRUCell(D_m_context + D_p, D_g)
         self.p_cell = nn.GRUCell(D_m_party + D_g, D_p)
-        # self.e_cell = nn.GRUCell(D_p, D_e)
         self.e_cell = new_gru_cell(D_p, D_e)
 
         self.dropout = nn.Dropout(dropout)
@@ -104,15 +98,9 @@ class MultilogueNetCell(nn.Module):
         q_ = ql_*(1-qmask_) + qs_*qmask_
         e0 = torch.zeros(qmask.size()[0], self.D_e).type(U.type()) if e0.size()[0]==0\
                 else e0
-        # print(emotion_shift_prob.shape)
         emotion_shift_weight = emotion_shift_prob[:,1].unsqueeze(1)
-        # e_ = self.e_cell(emotion_shift_weight*self._select_parties(q_,qm_idx), (1-emotion_shift_weight)*e0)
         e_ = self.e_cell(self._select_parties(q_,qm_idx),e0, 1 - emotion_shift_weight)
         
-        # print(emotion_shift_prob.shape, e_.shape, emotion_shift_prob[:,1].unsqueeze(1).shape)
-        # print(emotion_shift_prob[:5,:])
-        
-        # e_ = emotion_shift_weight*e_ + (1-emotion_shift_weight)*e0
         e_ = self.dropout(e_)
         return g_,q_,e_,alpha
 
@@ -175,13 +163,11 @@ class CategoricalModel(nn.Module):
         return pad_sequence(xfs)
 
     def forward(self, U_t, U_a,U_v, U_context, U_t_, P_t, qmask, umask, softmax_loss):
-        # print(U_t.shape, P_t.shape)
         siam_f1 = softmax_loss.classifier(torch.cat([P_t, U_t_, torch.abs(P_t - U_t_)],dim = -1))
 
  
         siamese_prob = F.softmax(siam_f1,2)
         emotion_shift_prob = 1-siamese_prob
-        # print(siamese_prob.shape)
         emotion_shift_prob_back = torch.zeros(emotion_shift_prob.shape).type(emotion_shift_prob.type())
         log_siamese_prob = torch.log(siamese_prob)
 
