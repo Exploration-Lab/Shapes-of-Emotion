@@ -52,3 +52,30 @@ We provide data and code for two vaiants of IEMOCAP - 4 label and 6 label.
 ```
 python IEMOCAP/train.py --gpu <core_no> --model_save_name <model_path> --label_count <labels> 
 ```
+
+## License
+
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+
+The RR corpus and software follows [CC-BY-NC](CC-BY-NC) license. Thus, users can share and adapt our dataset if they give credit to us and do not use our dataset for any commercial purposes.
+
+
+## Citation
+
+```
+@inproceedings{bansal-etal-2022-shapes,
+    title = "Shapes of Emotions: Multimodal Emotion Recognition in Conversations via Emotion Shifts",
+    author = "Bansal, Keshav  and
+      Agarwal, Harsh  and
+      Joshi, Abhinav  and
+      Modi, Ashutosh",
+    booktitle = "Proceedings of the First Workshop on Performance and Interpretability Evaluations of Multimodal, Multipurpose, Massive-Scale Models",
+    month = oct,
+    year = "2022",
+    address = "Virtual",
+    publisher = "International Conference on Computational Linguistics",
+    url = "https://aclanthology.org/2022.mmmpie-1.6",
+    pages = "44--56",
+    abstract = "Emotion Recognition in Conversations (ERC) is an important and active research area. Recent work has shown the benefits of using multiple modalities (e.g., text, audio, and video) for the ERC task. In a conversation, participants tend to maintain a particular emotional state unless some stimuli evokes a change. There is a continuous ebb and flow of emotions in a conversation. Inspired by this observation, we propose a multimodal ERC model and augment it with an emotion-shift component that improves performance. The proposed emotion-shift component is modular and can be added to any existing multimodal ERC model (with a few modifications). We experiment with different variants of the model, and results show that the inclusion of emotion shift signal helps the model to outperform existing models for ERC on MOSEI and IEMOCAP datasets.",
+}
+```
