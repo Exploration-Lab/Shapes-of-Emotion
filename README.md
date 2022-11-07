@@ -1,4 +1,11 @@
 ## Shapes of Emotions: Multimodal Emotion Recognition in Conversations viaEmotion Shifts
+
+The repository contains the full codebase of experiments and results of the paper "Shapes of Emotions: Multimodal Emotion Recognition in Conversations viaEmotion Shifts"
+
+If you use the models proposed in the paper, please cite the paper (citation given below).
+
+# Models and Code
+
 A step by step series of examples that tell you how to get the code running
 
 Unzip the file
